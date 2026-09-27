@@ -124,6 +124,13 @@ const QUILLS={
  stub:{name:'Candle Stub',ic:'stub',desc:'Heal 2 wax, right now.'}
 };
 const QKEYS=['q','w','e','r','t','y'];
+/* item key -> painterly art path; falls back to the line-art ICON badge when absent */
+const ART={
+};
+function cicHTML(icn,key,cls=''){
+ if(key&&ART[key])return `<span class="cic art ${cls}"><img src="${ART[key]}" alt=""></span>`;
+ return `<span class="cic ${cls}">${ic(icn)}</span>`;
+}
 const RELICS={
  taper:{name:'Everburning Taper',ic:'taper',desc:'+3 max wax, and heal 3 now.',gain(){R.maxWax+=3;heal(3);}},
  clepsydra:{name:'Clepsydra',ic:'clepsydra',desc:'An ancient water clock. Every fuse burns 4 seconds longer.'},
@@ -540,8 +547,8 @@ function newRun(){
  showChoice({emblem:'ledger',color:'#9A6B22',title:'Choose your first bookmark',text:'Every scholar needs a trusty bookmark. This one stays with you for the whole run.',
   choices:opts.map(k=>relicChoice(k)),after:()=>startAct(0)});
 }
-function relicChoice(k){return{kind:'Bookmark',ic:RELICS[k].ic,name:RELICS[k].name,desc:RELICS[k].desc,run(){gainRelic(k);}};}
-function quillChoice(id){return{kind:'Quill',q:true,ic:QUILLS[id].ic,name:QUILLS[id].name,desc:R.quills.length<R.slots?QUILLS[id].desc:'Your quill slots are full, so the Bindery buys it for 6 pages.',run(){if(!gainQuill(id))R.pages+=6;}};}
+function relicChoice(k){return{kind:'Bookmark',ic:RELICS[k].ic,key:k,name:RELICS[k].name,desc:RELICS[k].desc,run(){gainRelic(k);}};}
+function quillChoice(id){return{kind:'Quill',q:true,ic:QUILLS[id].ic,key:id,name:QUILLS[id].name,desc:R.quills.length<R.slots?QUILLS[id].desc:'Your quill slots are full, so the Bindery buys it for 6 pages.',run(){if(!gainQuill(id))R.pages+=6;}};}
 
 /* ================= encounters ================= */
 function startEncounter(kind,item,single){
@@ -878,7 +885,7 @@ function showChoice({emblem,color,title,text,sum,choices,after,extra}){
  document.body.classList.remove('illum');
  S.choices=choices;S.after=after;
  setScreen('reward',`<div class="panel"><div class="panel-head"><span class="emblem" style="--c:${color}">${ic(emblem)}</span><h2>${esc(title)}</h2>${sum?`<div class="sum">${esc(sum)}</div>`:''}<p>${esc(text)}</p></div>
- <div class="choices">${choices.map((c,i)=>`<button class="choice parch" data-act="choose" data-i="${i}"><span class="cic ${c.q?'q':''} ${c.w?'w':''}">${ic(c.ic)}</span><span class="kind">${esc(c.kind)}</span><h4>${esc(c.name)}</h4><p>${esc(c.desc)}</p></button>`).join('')}</div>${extra||''}</div>`);
+ <div class="choices">${choices.map((c,i)=>`<button class="choice parch" data-act="choose" data-i="${i}">${cicHTML(c.ic,c.key,`${c.q?'q':''} ${c.w?'w':''}`)}<span class="kind">${esc(c.kind)}</span><h4>${esc(c.name)}</h4><p>${esc(c.desc)}</p></button>`).join('')}</div>${extra||''}</div>`);
 }
 function showOutcome({emblem,color,title,text}){
  setScreen('reward',`<div class="panel"><div class="panel-head"><span class="emblem" style="--c:${color}">${ic(emblem)}</span><h2>${esc(title)}</h2></div><div class="outcome">${esc(text)}</div><div class="panel-foot"><button class="btn gold" data-act="proceed">Continue</button></div></div>`);
@@ -899,12 +906,12 @@ function rollLoot(gilded){
 function openChest(gilded,title,text){
  const loot=rollLoot(gilded);
  const cards=loot.map((l,i)=>{
-  let icn,name,desc,kind,cls='';
-  if(l.t==='relic'){const r=gainRelic(l.id);icn=r.ic;name=r.name;desc=r.desc;kind='Bookmark';}
-  else if(l.t==='quill'){const Q=QUILLS[l.id];const got=gainQuill(l.id);icn=Q.ic;name=Q.name;desc=got?Q.desc:'Slots full, sold for 6 pages.';if(!got)R.pages+=6;kind='Quill';cls='q';}
+  let icn,name,desc,kind,cls='',key=null;
+  if(l.t==='relic'){const r=gainRelic(l.id);icn=r.ic;name=r.name;desc=r.desc;kind='Bookmark';key=l.id;}
+  else if(l.t==='quill'){const Q=QUILLS[l.id];const got=gainQuill(l.id);icn=Q.ic;name=Q.name;desc=got?Q.desc:'Slots full, sold for 6 pages.';if(!got)R.pages+=6;kind='Quill';cls='q';key=l.id;}
   else if(l.t==='pages'){R.pages+=l.v;icn='page';name=`${l.v} pages`;desc='For the Bindery.';kind='Pages';}
   else{heal(l.v);icn='heart';name=`+${l.v} wax`;desc='Your candle burns brighter.';kind='Wax';cls='w';}
-  return `<div class="choice parch" style="animation-delay:${.5+i*.22}s"><span class="cic ${cls}">${ic(icn)}</span><span class="kind">${kind}</span><h4>${esc(name)}</h4><p>${esc(desc)}</p></div>`;
+  return `<div class="choice parch" style="animation-delay:${.5+i*.22}s">${cicHTML(icn,key,cls)}<span class="kind">${kind}</span><h4>${esc(name)}</h4><p>${esc(desc)}</p></div>`;
  }).join('');
  sfx.chest();
  setScreen('reward',`<div class="panel"><div class="panel-head" style="position:relative">${chestSVG('chestart open')}<h2>${esc(title||(gilded?'A gilded chest!':'A reward chest!'))}</h2><p>${esc(text||'')} ${loot.length} items tumble out.</p></div>
@@ -921,12 +928,12 @@ function showShop(){
 }
 function renderShop(){
  const items=S.shop.map((it,i)=>{
-  let icn,name,desc,kind,cls='';
-  if(it.t==='q'){const Q=QUILLS[it.id];icn=Q.ic;name=Q.name;desc=Q.desc;kind='Quill';cls='q';}
-  else if(it.t==='r'){const r=RELICS[it.id];icn=r.ic;name=r.name;desc=r.desc;kind='Bookmark';}
+  let icn,name,desc,kind,cls='',key=null;
+  if(it.t==='q'){const Q=QUILLS[it.id];icn=Q.ic;name=Q.name;desc=Q.desc;kind='Quill';cls='q';key=it.id;}
+  else if(it.t==='r'){const r=RELICS[it.id];icn=r.ic;name=r.name;desc=r.desc;kind='Bookmark';key=it.id;}
   else{icn='heart';name='Candle wax';desc='Restore 3 wax.';kind='Wax';cls='w';}
   const cant=it.sold||R.pages<it.p||(it.t==='q'&&R.quills.length>=R.slots)||(it.t==='w'&&R.wax>=R.maxWax);
-  return `<button class="choice parch ${it.sold?'sold':''}" data-act="buy" data-i="${i}" ${cant?'disabled':''}><span class="price">${ic('page')}${it.p}</span><span class="cic ${cls}">${ic(icn)}</span><span class="kind">${kind}</span><h4>${esc(name)}</h4><p>${esc(desc)}</p></button>`;
+  return `<button class="choice parch ${it.sold?'sold':''}" data-act="buy" data-i="${i}" ${cant?'disabled':''}><span class="price">${ic('page')}${it.p}</span>${cicHTML(icn,key,cls)}<span class="kind">${kind}</span><h4>${esc(name)}</h4><p>${esc(desc)}</p></button>`;
  }).join('');
  setScreen('shop',`<div class="panel"><div class="panel-head"><span class="emblem" style="--c:#9A6B22">${ic('bindery')}</span><h2>The Bindery</h2><p>An old bookbinder trims quills and stitches bookmarks by lamplight. You have <b>${R.pages}</b> pages.</p></div>
  <div class="choices">${items}</div><div class="panel-foot"><button class="btn" data-act="proceed">Leave the Bindery</button></div></div>`);
