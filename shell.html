@@ -86,9 +86,9 @@ body.illum #shade{background:radial-gradient(ellipse at 50% 40%,rgba(60,40,5,.05
 
 /* ---------- Folio ---------- */
 .folio-wrap{position:relative;display:flex;justify-content:center;align-items:flex-end}
-.folio{width:100%;max-width:170px;height:auto;animation:bob 2.8s ease-in-out infinite;transform-origin:50% 90%;overflow:visible}
-.folio .fe{display:none}
-.folio[data-mood="n"] .fe-n,.folio[data-mood="h"] .fe-h,.folio[data-mood="s"] .fe-s{display:inline}
+.folio{width:100%;max-width:170px;height:auto;animation:bob 2.8s ease-in-out infinite;transform-origin:50% 90%;overflow:visible;filter:drop-shadow(0 10px 10px rgba(0,0,0,.35))}
+.folio .fe{display:none;width:100%;height:auto}
+.folio[data-mood="n"] .fe-n,.folio[data-mood="h"] .fe-h,.folio[data-mood="s"] .fe-s{display:block}
 .folio.hop{animation:hop .55s cubic-bezier(.3,1.6,.5,1)}
 .folio.wince{animation:wince .5s ease-in-out}
 @keyframes bob{50%{transform:translateY(-4px) rotate(-1deg)}}

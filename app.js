@@ -295,21 +295,11 @@ const BG=(()=>{
 })();
 
 /* ================= art ================= */
-function folioSVG(mood='n',cls=''){return `<svg class="folio ${cls}" data-mood="${mood}" viewBox="0 0 150 122" aria-hidden="true">
-<defs><radialGradient id="fbg" cx=".38" cy=".3" r=".75"><stop offset="0" stop-color="#D2EE9C"/><stop offset="1" stop-color="#6E9E40"/></radialGradient></defs>
-<ellipse cx="70" cy="114" rx="58" ry="6" fill="rgba(0,0,0,.28)"/>
-<g fill="#2A1E17"><ellipse cx="27" cy="107" rx="5" ry="3"/><ellipse cx="48" cy="105" rx="5" ry="3"/><ellipse cx="70" cy="101" rx="5" ry="3"/></g>
-<g stroke="#2A1E17" stroke-width="3" fill="url(#fbg)"><circle cx="26" cy="93" r="13"/><circle cx="47" cy="89" r="15"/><circle cx="69" cy="82" r="17"/><circle cx="100" cy="60" r="30"/></g>
-<path d="M18 88q6-7 13-4M38 82q7-8 16-5M58 73q8-9 19-6" stroke="rgba(255,255,255,.4)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-<ellipse cx="80" cy="72" rx="6" ry="4" fill="#F08F7A" opacity=".65"/><ellipse cx="121" cy="72" rx="6" ry="4" fill="#F08F7A" opacity=".65"/>
-<g class="fe fe-n"><circle cx="89" cy="59" r="3.4" fill="#2A1E17"/><circle cx="113" cy="59" r="3.4" fill="#2A1E17"/><circle cx="90.3" cy="57.7" r="1.1" fill="#fff"/><circle cx="114.3" cy="57.7" r="1.1" fill="#fff"/><path d="M95 76q5 4 10 0" stroke="#2A1E17" stroke-width="2.8" fill="none" stroke-linecap="round"/></g>
-<g class="fe fe-h"><path d="M84 61q5-6 10 0M108 61q5-6 10 0" stroke="#2A1E17" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M92 73q8 11 16 0z" fill="#7a2a2a" stroke="#2A1E17" stroke-width="2.4" stroke-linejoin="round"/></g>
-<g class="fe fe-s"><circle cx="89" cy="61" r="3" fill="#2A1E17"/><circle cx="113" cy="61" r="3" fill="#2A1E17"/><path d="M82 50l10 4M120 50l-10 4" stroke="#2A1E17" stroke-width="2.6" stroke-linecap="round"/><path d="M94 80q6-6 12 0" stroke="#2A1E17" stroke-width="2.8" fill="none" stroke-linecap="round"/></g>
-<g stroke="#B8862F" stroke-width="3" fill="rgba(255,255,255,.28)"><circle cx="89" cy="59" r="10"/><circle cx="113" cy="59" r="10"/></g><path d="M99 58q2-3 4 0" stroke="#B8862F" stroke-width="3" fill="none"/>
-<path d="M84 37v6q16 7 32 0v-6" fill="#1E4A42" stroke="#2A1E17" stroke-width="3" stroke-linejoin="round"/>
-<path d="M72 32 100 22 128 32 100 42z" fill="#24574E" stroke="#2A1E17" stroke-width="3" stroke-linejoin="round"/>
-<path d="M100 32 121 36v11" stroke="#E0B354" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="121" cy="49" r="3.4" fill="#F6DA8E" stroke="#8a5d12" stroke-width="1.2"/><circle cx="100" cy="32" r="2.6" fill="#E0B354"/>
-</svg>`;}
+function folioSVG(mood='n',cls=''){return `<div class="folio ${cls}" data-mood="${mood}" aria-hidden="true">
+<img class="fe fe-n" src="assets/fox-neutral.png" alt="">
+<img class="fe fe-h" src="assets/fox-happy.png" alt="">
+<img class="fe fe-s" src="assets/fox-hurt.png" alt="">
+</div>`;}
 function blotSVG(){return `<svg class="blot" id="blot" viewBox="0 0 200 170" aria-hidden="true">
 <defs><radialGradient id="blg" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#4a3470"/><stop offset=".6" stop-color="#1d1230"/><stop offset="1" stop-color="#0c0716"/></radialGradient></defs>
 <g opacity=".85"><rect x="18" y="30" width="18" height="24" rx="2" fill="#F4E7C9" transform="rotate(-24 27 42)"/><rect x="165" y="44" width="16" height="22" rx="2" fill="#E6D2A6" transform="rotate(18 173 55)"/><rect x="150" y="10" width="13" height="17" rx="2" fill="#F4E7C9" transform="rotate(-10 156 18)"/></g>
