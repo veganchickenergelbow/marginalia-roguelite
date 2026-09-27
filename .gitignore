@@ -1,0 +1,6 @@
+qdump.json
+qtagged.json
+questions.v*.js
+blk_*.js
+tag.py
+game.html
